@@ -25,10 +25,6 @@ function checkProjectExists(req, res, next) {
 // number of requests
 function logRequests(req, res, next) {
   numberOfRequests++;
-
-  const numberReq = `Número de requisições: ${numberOfRequests}`
-  console.log(numberReq);
-
   return next();
 }
 
@@ -60,7 +56,7 @@ server.put('/projects/:id', checkProjectExists, (req, res) => {
   const { title } = req.body;
 
   const project = projects.find((p) => {
-    p.id === id
+    p.id === id;
   });
 
   project.title = title;
@@ -73,7 +69,7 @@ server.delete('/projects/:id', checkProjectExists, (req, res) => {
   const { id } = req.params;
 
   const index = projects.findIndex((p) => {
-    p.id === id
+    p.id === id;
   });
 
   projects.splice(index, 1);
@@ -86,12 +82,12 @@ server.post('/projects/:id/tasks', checkProjectExists, (req, res) => {
   const { title } = req.body;
 
   const project = projects.find((p) => {
-    p.id === id
+    p.id === id;
   });
 
   project.tasks.push(title);
 
   return res.json(project);
-});;
+});
 
 server.listen(3000);
