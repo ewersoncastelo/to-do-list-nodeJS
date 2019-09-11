@@ -11,7 +11,9 @@ const projects = [];
 // check project exist
 function checkProjectExists(req, res, next) {
   const { id } = req.params;
-  const project = projects.find(p => p.id === id);
+  const project = projects.find((p) => {
+    p.id === id
+  });
 
   if (!project) {
     return res.status(400).json({ error: 'Project not found' });
@@ -24,7 +26,8 @@ function checkProjectExists(req, res, next) {
 function logRequests(req, res, next) {
   numberOfRequests++;
 
-  console.log(`Número de requisições: ${numberOfRequests}`);
+  const numberReq = `Número de requisições: ${numberOfRequests}`
+  console.log(numberReq);
 
   return next();
 }
@@ -56,7 +59,9 @@ server.put('/projects/:id', checkProjectExists, (req, res) => {
   const { id } = req.params;
   const { title } = req.body;
 
-  const project = projects.find(p => p.id === id);
+  const project = projects.find((p) => {
+    p.id === id
+  });
 
   project.title = title;
 
@@ -67,7 +72,9 @@ server.put('/projects/:id', checkProjectExists, (req, res) => {
 server.delete('/projects/:id', checkProjectExists, (req, res) => {
   const { id } = req.params;
 
-  const index = projects.findIndex(p => p.id === id);
+  const index = projects.findIndex((p) => {
+    p.id === id
+  });
 
   projects.splice(index, 1);
 
@@ -78,7 +85,9 @@ server.post('/projects/:id/tasks', checkProjectExists, (req, res) => {
   const { id } = req.params;
   const { title } = req.body;
 
-  const project = projects.find(p => p.id === id);
+  const project = projects.find((p) => {
+    p.id === id
+  });
 
   project.tasks.push(title);
 
