@@ -1,11 +1,11 @@
-# Challenger 01 - BootCamp GoStack 8.0
-🚀👨🏻‍🚀 https://rocketseat.com.br/bootcamp
+# To Do List
 
-# Details The Challenger!
-Create an application from scratch using Express.Application will be responsible for storing projects and their tasks.
+# Details The App!
+This is an application that uses Express to store projects and their to-do lists..
 
   - Routes
   - Middlewares
+  - Express
 
 # Installation
 
