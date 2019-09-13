@@ -10,7 +10,7 @@
 <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/ewersoncastelo/to-do-list-nodeJS.svg">
   <img alt="GitHub language count" src="https://img.shields.io/github/languages/count/ewersoncastelo/to-do-list-nodeJS.svg">
   <a href="https://www.codacy.com/manual/ewersoncastelo/to-do-list-nodeJS?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ewersoncastelo/to-do-list-nodeJS&amp;utm_campaign=Badge_Grade"><img src="https://api.codacy.com/project/badge/Grade/0c62144c58794a21ac46ce18c7f606ff"/></a>
-<a href="https://github.com/ewersoncastelo/to-do-list-nodeJS/blob/master/LICENCE"><img alt="GitHub license" src="https://img.shields.io/github/license/ewersoncastelo/to-do-list-nodeJS"></a>
+<a href="https://github.com/ewersoncastelo/to-do-list-nodeJS/blob/master/LICENSE"><img alt="GitHub license" src="https://img.shields.io/github/license/ewersoncastelo/to-do-list-nodeJS"></a>
 <a href="https://github.com/ewersoncastelo/to-do-list-nodeJS/issues">
     <img alt="Repository issues" src="https://img.shields.io/github/issues/ewersoncastelo/to-do-list-nodeJS.svg">
   </a>
