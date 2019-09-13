@@ -22,9 +22,9 @@
 
 ## Installation
 
-- [Express](https://expressjs.com/)
-- [VS Code][vc] with [EditorConfig][vceditconfig] and [ESLint][vceslint]
-- [Insomnia](https://insomnia.rest/download/)
+-   [Express](https://expressjs.com/)
+-   [VS Code][vc] with [EditorConfig][vceditconfig] and [ESLint][vceslint]
+-   [Insomnia](https://insomnia.rest/download/)
 
 ## Software Required
 
@@ -32,9 +32,9 @@ To access the routes (post, get, update, ..), download the insomnia, and the set
 
 To perform tests on the api routes follow the following steps:
 
-- Run the program and click on the Main Logo
-- Then click the import/export option and import the file **Insonmia-desafio01.json**
-- Switch Workspace for **Bootcamp Desafio #01**
+-   Run the program and click on the Main Logo
+-   Then click the import/export option and import the file **Insonmia-desafio01.json**
+-   Switch Workspace for **Bootcamp Desafio #01**
 
 ## How To Use
 
