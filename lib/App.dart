@@ -38,16 +38,18 @@ class _AppState extends State<App> {
       ),
       material: (context, platform) {
         return MaterialScaffoldData(
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
-          floatingActionButton: FloatingActionButton(
+          // floatingActionButtonLocation:
+          //     FloatingActionButtonLocation.centerDocked,
+          floatingActionButton: FloatingActionButton.extended(
             onPressed: () {
               print("button tapped");
             },
             backgroundColor: Colors.purple,
-            child: Icon(Icons.add),
+            icon: Icon(Icons.add_shopping_cart),
+            label: Text("Add"),
+            // child: Icon(Icons.add),
             elevation: 6,
-            mini: true,
+            // mini: true,
           ),
         );
       },
