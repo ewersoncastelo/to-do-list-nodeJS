@@ -8,7 +8,12 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  int _index = 0;
+  List _listTasks = [
+    "Go to Shopping",
+    "Put in bed the book",
+    "Put in bed the book",
+    "Put in bed the book"
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -17,19 +22,53 @@ class _AppState extends State<App> {
         title: Text(
           "To Do List",
         ),
+        material: (context, platform) {
+          return MaterialAppBarData(
+            backgroundColor: Colors.deepPurpleAccent,
+          );
+        },
         cupertino: (context, platform) {
           return CupertinoNavigationBarData(
             transitionBetweenRoutes: false,
             trailing: PlatformButton(
               padding: EdgeInsets.all(4.0),
               child: Icon(
-                CupertinoIcons.info,
+                CupertinoIcons.add,
                 color: CupertinoColors.inactiveGray,
               ),
               onPressed: () {
-                Navigator.pop(
-                  context,
-                  CupertinoPageRoute(builder: null),
+                showCupertinoDialog(
+                  context: context,
+                  builder: (_) => PlatformAlertDialog(
+                    title: Padding(
+                      padding: EdgeInsets.all(5),
+                      child: Text(
+                        'Add Some Task',
+                        style: TextStyle(color: CupertinoColors.label),
+                      ),
+                    ),
+                    content: PlatformTextField(
+                      cupertino: (context, platform) {
+                        return CupertinoTextFieldData(
+                          placeholder: "Type yout task",
+                        );
+                      },
+                      onChanged: (text) {},
+                    ),
+                    actions: <Widget>[
+                      PlatformDialogAction(
+                        child: Text("Cancel"),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                      PlatformDialogAction(
+                        child: Text("Save"),
+                        onPressed: () {
+                          // save data
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  ),
                 );
               },
             ),
@@ -38,47 +77,74 @@ class _AppState extends State<App> {
       ),
       material: (context, platform) {
         return MaterialScaffoldData(
-          // floatingActionButtonLocation:
-          //     FloatingActionButtonLocation.centerDocked,
           floatingActionButton: FloatingActionButton.extended(
             onPressed: () {
-              print("button tapped");
+              showPlatformDialog(
+                context: context,
+                builder: (_) => PlatformAlertDialog(
+                  title: Text('Alert'),
+                  content: TextField(
+                    decoration: InputDecoration(labelText: "Type your task"),
+                    onChanged: (text) {},
+                  ),
+                  actions: <Widget>[
+                    PlatformDialogAction(
+                      child: Text("Cancel"),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    PlatformDialogAction(
+                      child: Text("Save"),
+                      onPressed: () {
+                        // save data
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+              );
             },
-            backgroundColor: Colors.purple,
-            icon: Icon(Icons.add_shopping_cart),
-            label: Text("Add"),
-            // child: Icon(Icons.add),
+            backgroundColor: Colors.deepPurple,
+            icon: Icon(Icons.add),
+            label: Text("New Task"),
             elevation: 6,
-            // mini: true,
           ),
         );
       },
-      body: Center(
-        child: Text("Hello"),
-      ),
-      bottomNavBar: PlatformNavBar(
-        currentIndex: _index,
-        itemChanged: (index) {
-          setState(() {
-            _index = index;
-          });
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.business, color: Colors.black38),
-            title: Text('Screen 1'),
-            activeIcon: Icon(Icons.business, color: Colors.black),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.business, color: Colors.black38),
-            title: Text('Screen 2'),
-            activeIcon: Icon(Icons.business, color: Colors.black),
-          ),
-        ],
+      body: PlatformWidget(
         material: (context, platform) {
-          return MaterialNavBarData(
-            type: BottomNavigationBarType.fixed,
-            fixedColor: Colors.white,
+          return Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _listTasks.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(
+                        _listTasks[index],
+                      ),
+                    );
+                  },
+                ),
+              )
+            ],
+          );
+        },
+        cupertino: (context, platform) {
+          return Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _listTasks.length,
+                  itemBuilder: (context, index) {
+                    return ListBody(
+                      children: [
+                        Text(_listTasks[index]),
+                      ],
+                    );
+                  },
+                ),
+              )
+            ],
           );
         },
       ),
