@@ -12,16 +12,16 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  List _listTasks = [
-    "Go to Shopping",
-    "Put in bed the book",
-    "Put in bed the book",
-    "Put in bed the book"
-  ];
+  List _listTasks = [];
+
+  Future<File> _getFilePath() async {
+    final directory = await getApplicationDocumentsDirectory();
+    return File("${directory.path}/data.json");
+  }
 
   _saveFile() async {
-    final directory = await getApplicationDocumentsDirectory();
-    var file = File("${directory.path}/data.json");
+    // Path File
+    var file = await _getFilePath();
 
     // create data
     Map<String, dynamic> task = Map();
@@ -33,9 +33,34 @@ class _AppState extends State<App> {
     file.writeAsString(data);
   }
 
+  _loadFile() async {
+    try {
+      final file = await _getFilePath();
+
+      return file.readAsString();
+    } catch (error) {
+      error.toString();
+      return null;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _loadFile().then((data) {
+      setState(() {
+        _listTasks = json.decode(data);
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     _saveFile();
+
+    print(_listTasks.toString());
+
     return PlatformScaffold(
       appBar: PlatformAppBar(
         title: Text(
@@ -138,9 +163,7 @@ class _AppState extends State<App> {
                   itemCount: _listTasks.length,
                   itemBuilder: (context, index) {
                     return ListTile(
-                      title: Text(
-                        _listTasks[index],
-                      ),
+                      title: Text(_listTasks[index]['title']),
                     );
                   },
                 ),
@@ -157,7 +180,7 @@ class _AppState extends State<App> {
                   itemBuilder: (context, index) {
                     return ListBody(
                       children: [
-                        Text(_listTasks[index]),
+                        Text(_listTasks[index]['title']),
                       ],
                     );
                   },
