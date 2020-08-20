@@ -1,6 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:path_provider/path_provider.dart';
 
 class App extends StatefulWidget {
   @override
@@ -15,8 +19,23 @@ class _AppState extends State<App> {
     "Put in bed the book"
   ];
 
+  _saveFile() async {
+    final directory = await getApplicationDocumentsDirectory();
+    var file = File("${directory.path}/data.json");
+
+    // create data
+    Map<String, dynamic> task = Map();
+    task["title"] = "Go to Market";
+    task["complete"] = false;
+    _listTasks.add(task);
+
+    var data = json.encode(_listTasks);
+    file.writeAsString(data);
+  }
+
   @override
   Widget build(BuildContext context) {
+    _saveFile();
     return PlatformScaffold(
       appBar: PlatformAppBar(
         title: Text(
