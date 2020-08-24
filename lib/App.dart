@@ -13,6 +13,7 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   List _listTasks = [];
+  TextEditingController _controllerTaskTextEditing = TextEditingController();
 
   Future<File> _getFilePath() async {
     final directory = await getApplicationDocumentsDirectory();
@@ -22,12 +23,6 @@ class _AppState extends State<App> {
   _saveFile() async {
     // Path File
     var file = await _getFilePath();
-
-    // create data
-    Map<String, dynamic> task = Map();
-    task["title"] = "Go to Market";
-    task["complete"] = false;
-    _listTasks.add(task);
 
     var data = json.encode(_listTasks);
     file.writeAsString(data);
@@ -44,6 +39,23 @@ class _AppState extends State<App> {
     }
   }
 
+  _saveTaskUser() {
+    String textTaskUser = _controllerTaskTextEditing.text;
+
+    // create data
+    Map<String, dynamic> task = Map();
+    task["title"] = textTaskUser;
+    task["complete"] = false;
+
+    setState(() {
+      _listTasks.add(task);
+    });
+
+    _saveFile();
+
+    _controllerTaskTextEditing.text = "";
+  }
+
   @override
   void initState() {
     super.initState();
@@ -51,16 +63,13 @@ class _AppState extends State<App> {
     _loadFile().then((data) {
       setState(() {
         _listTasks = json.decode(data);
+        print(_listTasks.toString());
       });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    _saveFile();
-
-    print(_listTasks.toString());
-
     return PlatformScaffold(
       appBar: PlatformAppBar(
         title: Text(
@@ -98,6 +107,7 @@ class _AppState extends State<App> {
                         );
                       },
                       onChanged: (text) {},
+                      controller: _controllerTaskTextEditing,
                     ),
                     actions: <Widget>[
                       PlatformDialogAction(
@@ -108,6 +118,7 @@ class _AppState extends State<App> {
                         child: Text("Save"),
                         onPressed: () {
                           // save data
+                          _saveTaskUser();
                           Navigator.pop(context);
                         },
                       ),
@@ -130,6 +141,7 @@ class _AppState extends State<App> {
                   content: TextField(
                     decoration: InputDecoration(labelText: "Type your task"),
                     onChanged: (text) {},
+                    controller: _controllerTaskTextEditing,
                   ),
                   actions: <Widget>[
                     PlatformDialogAction(
@@ -140,6 +152,7 @@ class _AppState extends State<App> {
                       child: Text("Save"),
                       onPressed: () {
                         // save data
+                        _saveTaskUser();
                         Navigator.pop(context);
                       },
                     ),
@@ -162,9 +175,20 @@ class _AppState extends State<App> {
                 child: ListView.builder(
                   itemCount: _listTasks.length,
                   itemBuilder: (context, index) {
-                    return ListTile(
+                    return CheckboxListTile(
                       title: Text(_listTasks[index]['title']),
+                      value: _listTasks[index]['complete'],
+                      onChanged: (value) {
+                        setState(() {
+                          _listTasks[index]['complete'] = value;
+                        });
+
+                        _saveFile();
+                      },
                     );
+                    // return ListTile(
+                    //   title: Text(_listTasks[index]['title']),
+                    // );
                   },
                 ),
               )
@@ -178,7 +202,8 @@ class _AppState extends State<App> {
                 child: ListView.builder(
                   itemCount: _listTasks.length,
                   itemBuilder: (context, index) {
-                    return ListBody(
+                    return ListView(
+                      addAutomaticKeepAlives: true,
                       children: [
                         Text(_listTasks[index]['title']),
                       ],
