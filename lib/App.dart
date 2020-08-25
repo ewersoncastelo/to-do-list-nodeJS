@@ -175,16 +175,62 @@ class _AppState extends State<App> {
                 child: ListView.builder(
                   itemCount: _listTasks.length,
                   itemBuilder: (context, index) {
-                    return CheckboxListTile(
-                      title: Text(_listTasks[index]['title']),
-                      value: _listTasks[index]['complete'],
-                      onChanged: (value) {
-                        setState(() {
-                          _listTasks[index]['complete'] = value;
-                        });
+                    final item = _listTasks[index];
 
-                        _saveFile();
+                    return Dismissible(
+                      key: Key(item['title']),
+                      child: CheckboxListTile(
+                        title: Text(item['title']),
+                        value: item['complete'],
+                        onChanged: (value) {
+                          setState(() {
+                            item['complete'] = value;
+                          });
+
+                          _saveFile();
+                        },
+                      ),
+                      // direction: DismissDirection.horizontal,
+                      onDismissed: (direction) {
+                        if (direction == DismissDirection.startToEnd) {
+                          print("Select edit");
+                        }
+
+                        if (direction == DismissDirection.endToStart) {
+                          print("Delete object");
+                        }
+
+                        setState(() {
+                          _listTasks.removeAt(index);
+                          _saveFile();
+                        });
                       },
+                      background: Container(
+                        color: Colors.grey,
+                        padding: EdgeInsets.all(16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Icon(
+                              Icons.edit,
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
+                      ),
+                      secondaryBackground: Container(
+                        color: Colors.red,
+                        padding: EdgeInsets.all(16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
+                      ),
                     );
                   },
                 ),
