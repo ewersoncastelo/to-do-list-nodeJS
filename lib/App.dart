@@ -186,9 +186,6 @@ class _AppState extends State<App> {
                         _saveFile();
                       },
                     );
-                    // return ListTile(
-                    //   title: Text(_listTasks[index]['title']),
-                    // );
                   },
                 ),
               )
@@ -196,22 +193,29 @@ class _AppState extends State<App> {
           );
         },
         cupertino: (context, platform) {
-          return Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  itemCount: _listTasks.length,
-                  itemBuilder: (context, index) {
-                    return ListView(
-                      addAutomaticKeepAlives: true,
-                      children: [
-                        Text(_listTasks[index]['title']),
-                      ],
-                    );
-                  },
-                ),
-              )
-            ],
+          return SafeArea(
+            child: ListView.builder(
+              padding: EdgeInsets.all(10),
+              itemCount: _listTasks.length,
+              itemBuilder: (context, index) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(_listTasks[index]['title']),
+                    CupertinoSwitch(
+                      value: _listTasks[index]['complete'],
+                      onChanged: (value) {
+                        setState(() {
+                          _listTasks[index]['complete'] = value;
+                        });
+
+                        _saveFile();
+                      },
+                    )
+                  ],
+                );
+              },
+            ),
           );
         },
       ),
