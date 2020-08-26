@@ -8,6 +8,8 @@
 .buildlog/
 .history
 .svn/
+pubspec.lock
+yarn.lock
 
 # IntelliJ related
 *.iml
