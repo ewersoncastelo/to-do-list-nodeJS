@@ -72,7 +72,7 @@ class _AppState extends State<App> {
           _saveFile();
         },
       ),
-      // direction: DismissDirection.horizontal,
+      direction: DismissDirection.horizontal,
       onDismissed: (direction) {
         if (direction == DismissDirection.startToEnd) {
           print("Select edit");
@@ -117,21 +117,66 @@ class _AppState extends State<App> {
   }
 
   Widget createListItemIOS(context, index) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(_listTasks[index]['title']),
-        CupertinoSwitch(
-          value: _listTasks[index]['complete'],
-          onChanged: (value) {
-            setState(() {
-              _listTasks[index]['complete'] = value;
-            });
+    final item = _listTasks[index];
 
+    return Dismissible(
+      key: Key(item['title']),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(_listTasks[index]['title']),
+          CupertinoSwitch(
+            value: _listTasks[index]['complete'],
+            onChanged: (value) {
+              setState(() {
+                _listTasks[index]['complete'] = value;
+              });
+
+              _saveFile();
+            },
+          )
+        ],
+      ),
+      direction: DismissDirection.horizontal,
+      onDismissed: (direction) {
+        if (direction == DismissDirection.startToEnd) {
+          print("Select edit");
+        }
+
+        if (direction == DismissDirection.endToStart) {
+          print("Delete object");
+          setState(() {
+            _listTasks.removeAt(index);
             _saveFile();
-          },
-        )
-      ],
+          });
+        }
+      },
+      background: Container(
+        // color: Colors.grey,
+        padding: EdgeInsets.only(left: 16),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Icon(
+              CupertinoIcons.pen,
+              color: CupertinoColors.systemGrey,
+            ),
+          ],
+        ),
+      ),
+      secondaryBackground: Container(
+        color: CupertinoColors.destructiveRed,
+        padding: EdgeInsets.only(right: 16),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Icon(
+              CupertinoIcons.delete,
+              color: CupertinoColors.white,
+            ),
+          ],
+        ),
+      ),
     );
   }
 
