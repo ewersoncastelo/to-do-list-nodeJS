@@ -13,6 +13,7 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   List _listTasks = [];
+  Map<String, dynamic> _lastTaskRemoved = Map();
   TextEditingController _controllerTaskTextEditing = TextEditingController();
 
   Future<File> _getFilePath() async {
@@ -72,20 +73,40 @@ class _AppState extends State<App> {
           _saveFile();
         },
       ),
-      direction: DismissDirection.horizontal,
+      direction: DismissDirection.endToStart,
       onDismissed: (direction) {
         if (direction == DismissDirection.startToEnd) {
           print("Select edit");
         }
 
+        // get last item removed
+        _lastTaskRemoved = _listTasks[index];
+
         if (direction == DismissDirection.endToStart) {
-          print("Delete object");
+          setState(() {
+            _listTasks.removeAt(index);
+            _saveFile();
+          });
         }
 
-        setState(() {
-          _listTasks.removeAt(index);
-          _saveFile();
-        });
+        final snackbar = SnackBar(
+          content: Text("Task Removed"),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 5),
+          action: SnackBarAction(
+            label: "Undo",
+            textColor: Colors.red,
+            onPressed: () {
+              setState(() {
+                // add again task removed
+                _listTasks.insert(index, _lastTaskRemoved);
+                _saveFile();
+              });
+            },
+          ),
+        );
+
+        Scaffold.of(context).showSnackBar(snackbar);
       },
       background: Container(
         color: Colors.grey,
@@ -143,13 +164,34 @@ class _AppState extends State<App> {
           print("Select edit");
         }
 
+        // get last item removed
+        _lastTaskRemoved = _listTasks[index];
+
         if (direction == DismissDirection.endToStart) {
-          print("Delete object");
           setState(() {
             _listTasks.removeAt(index);
             _saveFile();
           });
         }
+
+        final snackbar = SnackBar(
+          content: Text("Task Removed"),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 5),
+          action: SnackBarAction(
+            label: "Undo",
+            textColor: Colors.red,
+            onPressed: () {
+              setState(() {
+                // add again task removed
+                _listTasks.insert(index, _lastTaskRemoved);
+                _saveFile();
+              });
+            },
+          ),
+        );
+
+        Scaffold.of(context).showSnackBar(snackbar);
       },
       background: Container(
         // color: Colors.grey,
