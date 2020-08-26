@@ -138,10 +138,8 @@ class _AppState extends State<App> {
   }
 
   Widget createListItemIOS(context, index) {
-    final item = _listTasks[index];
-
     return Dismissible(
-      key: Key(item['title']),
+      key: Key(DateTime.now().millisecondsSinceEpoch.toString()),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -158,7 +156,7 @@ class _AppState extends State<App> {
           )
         ],
       ),
-      direction: DismissDirection.horizontal,
+      direction: DismissDirection.endToStart,
       onDismissed: (direction) {
         if (direction == DismissDirection.startToEnd) {
           print("Select edit");
@@ -348,10 +346,12 @@ class _AppState extends State<App> {
         },
         cupertino: (context, platform) {
           return SafeArea(
-            child: ListView.builder(
-              padding: EdgeInsets.all(10),
-              itemCount: _listTasks.length,
-              itemBuilder: createListItemIOS,
+            child: Scaffold(
+              body: ListView.builder(
+                padding: EdgeInsets.all(10),
+                itemCount: _listTasks.length,
+                itemBuilder: createListItemIOS,
+              ),
             ),
           );
         },
