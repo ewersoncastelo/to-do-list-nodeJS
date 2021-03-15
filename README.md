@@ -16,17 +16,11 @@
 </p>
 
 <p align="left">
-
-  <a href="https://github.com/EwersonCastelo" target="_blank">
-    <img alt="Ewerson Castelo" src="https://img.shields.io/badge/made%20by-Ewerson Castelo-informational">
-  </a>
-  <a href="https://github.com/EwersonCastelo" target="_blank" >
-    <img alt="Github - Ewerson Castelo" src="https://img.shields.io/badge/Github--%23F8952D?style=social&logo=github">
-  </a>
+ 
   <a href="https://www.linkedin.com/in/ewersoncastelo/" target="_blank" >
     <img alt="Linkedin - Ewerson Castelo" src="https://img.shields.io/badge/Linkedin--%23F8952D?style=social&logo=linkedin">
   </a>
-  <a href="mailto:ewerson.castelo@gmail.com" target="_blank" >
+  <a href="mailto:ewersoncastelo@gmail.com" target="_blank" >
     <img alt="Email - Ewerson Castelo" src="https://img.shields.io/badge/Email--%23F8952D?style=social&logo=gmail">
   </a>
   <a href="https://api.whatsapp.com/send?phone=5569999682210"
