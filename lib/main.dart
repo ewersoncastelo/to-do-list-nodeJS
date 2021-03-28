@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 void main() {
   runApp(
@@ -19,7 +22,7 @@ class TodoList extends StatefulWidget {
 class _TodoListState extends State<TodoList> {
   @override
   Widget build(BuildContext context) {
-    return Platform.isIOS
+    return Platform.isAndroid
         ? MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
@@ -28,15 +31,6 @@ class _TodoListState extends State<TodoList> {
             ),
             home: Scaffold(
               appBar: AppBar(
-                actions: [
-                  ElevatedButton(
-                    onPressed: () {
-                      print("try reset values..");
-                    },
-                    child: Text("Botao"),
-                    style: ButtonStyle(elevation: MaterialStateProperty.all(1)),
-                  ),
-                ],
                 title: Text("Lista de Tarefas"),
                 centerTitle: false,
                 brightness: Brightness.dark,
@@ -47,7 +41,7 @@ class _TodoListState extends State<TodoList> {
         : CupertinoApp(
             debugShowCheckedModeBanner: false,
             theme: CupertinoThemeData(
-              barBackgroundColor: Colors.blueAccent,
+              barBackgroundColor: Colors.blue[900],
               textTheme: CupertinoTextThemeData(
                 navTitleTextStyle: TextStyle(
                   color: CupertinoColors.white,
@@ -67,13 +61,6 @@ class _TodoListState extends State<TodoList> {
                         style: TextStyle(color: Colors.white),
                       ),
                       brightness: Brightness.dark,
-                      trailing: TextButton(
-                        child: Text(
-                          "Bottao",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        onPressed: () {},
-                      ),
                     ),
                   ];
                 },
@@ -115,10 +102,43 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Text("Home Page"),
-      ),
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.fromLTRB(17, 1, 7, 1),
+          child: Form(
+            child: Row(
+              children: [
+                Expanded(
+                  child: PlatformTextField(
+                    material: (context, platform) => MaterialTextFieldData(
+                      decoration: InputDecoration(
+                        labelText: "Nova Tarefa",
+                        labelStyle: TextStyle(color: Colors.blueAccent[100]),
+                      ),
+                    ),
+                    cupertino: (context, platform) => CupertinoTextFieldData(
+                      placeholder: 'Nova Tarefa',
+                      placeholderStyle: TextStyle(
+                        color: Colors.blueAccent[100],
+                      ),
+                    ),
+                  ),
+                ),
+                PlatformButton(
+                  onPressed: () => print('Adicionar'),
+                  child: PlatformText('Adicionar'),
+                  material: (context, platform) => MaterialRaisedButtonData(
+                    color: Colors.blueAccent,
+                    textColor: Colors.white,
+                    elevation: 10,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
