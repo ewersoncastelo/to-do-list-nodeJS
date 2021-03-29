@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:path_provider/path_provider.dart';
@@ -102,9 +103,18 @@ class _HomePageState extends State<HomePage> {
                   title: Text(_toDoList[index]["title"]),
                   value: _toDoList[index]["ok"],
                   secondary: CircleAvatar(
-                    child: Icon(
-                      _toDoList[index]["ok"] ? Icons.check : Icons.error,
-                    ),
+                    backgroundColor: Colors.white,
+                    child: Platform.isAndroid
+                        ? Icon(
+                            _toDoList[index]["ok"]
+                                ? Icons.check
+                                : Icons.access_alarm_outlined,
+                          )
+                        : Icon(
+                            _toDoList[index]["ok"]
+                                ? CupertinoIcons.checkmark_alt
+                                : CupertinoIcons.alarm,
+                          ),
                   ),
                 ),
               );
