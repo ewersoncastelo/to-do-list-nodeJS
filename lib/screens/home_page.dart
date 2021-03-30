@@ -16,6 +16,19 @@ class _HomePageState extends State<HomePage> {
 
   final _toDoController = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+
+    _readData().then(
+      (value) => {
+        setState(() {
+          _toDoList = json.decode(value);
+        })
+      },
+    );
+  }
+
   Future<File> _getFilePath() async {
     final directory = await getApplicationDocumentsDirectory();
     return File("${directory.path}/data.json");
@@ -24,7 +37,7 @@ class _HomePageState extends State<HomePage> {
   Future<File> _saveData() async {
     String data = json.encode(_toDoList);
     final file = await _getFilePath();
-    file.writeAsString(data);
+    return file.writeAsString(data);
   }
 
   Future<String> _readData() async {
@@ -44,6 +57,7 @@ class _HomePageState extends State<HomePage> {
       _toDoController.text = "";
       newTodoTask["ok"] = false;
       _toDoList.add(newTodoTask);
+      _saveData();
     });
   }
 
@@ -98,6 +112,7 @@ class _HomePageState extends State<HomePage> {
                   onChanged: (completedTask) {
                     setState(() {
                       _toDoList[index]["ok"] = completedTask;
+                      _saveData();
                     });
                   },
                   title: Text(_toDoList[index]["title"]),
