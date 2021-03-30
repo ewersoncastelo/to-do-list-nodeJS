@@ -108,28 +108,44 @@ class _HomePageState extends State<HomePage> {
             itemCount: _toDoList.length,
             itemBuilder: (context, index) {
               return Material(
-                child: CheckboxListTile(
-                  onChanged: (completedTask) {
-                    setState(() {
-                      _toDoList[index]["ok"] = completedTask;
-                      _saveData();
-                    });
-                  },
-                  title: Text(_toDoList[index]["title"]),
-                  value: _toDoList[index]["ok"],
-                  secondary: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: Platform.isAndroid
-                        ? Icon(
-                            _toDoList[index]["ok"]
-                                ? Icons.check
-                                : Icons.access_alarm_outlined,
-                          )
-                        : Icon(
-                            _toDoList[index]["ok"]
-                                ? CupertinoIcons.checkmark_alt
-                                : CupertinoIcons.alarm,
-                          ),
+                child: Dismissible(
+                  key: Key(index.toString()),
+                  background: Container(
+                    color: Colors.red,
+                    child: Align(
+                      alignment: Alignment(-0.9, 0.0),
+                      child: Icon(
+                        Platform.isAndroid
+                            ? Icons.delete
+                            : CupertinoIcons.delete,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  direction: DismissDirection.startToEnd,
+                  child: CheckboxListTile(
+                    onChanged: (completedTask) {
+                      setState(() {
+                        _toDoList[index]["ok"] = completedTask;
+                        _saveData();
+                      });
+                    },
+                    title: Text(_toDoList[index]["title"]),
+                    value: _toDoList[index]["ok"],
+                    secondary: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      child: Platform.isAndroid
+                          ? Icon(
+                              _toDoList[index]["ok"]
+                                  ? Icons.check
+                                  : Icons.access_alarm_outlined,
+                            )
+                          : Icon(
+                              _toDoList[index]["ok"]
+                                  ? CupertinoIcons.checkmark_alt
+                                  : CupertinoIcons.alarm,
+                            ),
+                    ),
                   ),
                 ),
               );
