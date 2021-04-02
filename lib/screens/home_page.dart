@@ -63,6 +63,25 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Future<Null> _refresh() async {
+    await Future.delayed(Duration(seconds: 1));
+
+    setState(() {
+      _toDoList.sort((a, b) {
+        if (a["ok"] && !b["ok"])
+          return 1;
+        else if (!a["ok"] && b["ok"])
+          return 1;
+        else
+          return 0;
+      });
+
+      _saveData();
+    });
+
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -105,112 +124,116 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         Expanded(
-          child: ListView.builder(
-            padding: EdgeInsets.only(top: 10),
-            itemCount: _toDoList.length,
-            itemBuilder: (context, index) {
-              return Material(
-                child: Dismissible(
-                  key: Key(DateTime.now().microsecondsSinceEpoch.toString()),
-                  background: Container(
-                    color: Colors.red,
-                    child: Align(
-                      alignment: Alignment(-0.9, 0.0),
-                      child: Icon(
-                        Platform.isAndroid
-                            ? Icons.delete
-                            : CupertinoIcons.delete,
-                        color: Colors.white,
+          child: RefreshIndicator(
+            onRefresh: _refresh,
+            child: ListView.builder(
+              padding: EdgeInsets.only(top: 10),
+              itemCount: _toDoList.length,
+              itemBuilder: (context, index) {
+                return Material(
+                  child: Dismissible(
+                    key: Key(DateTime.now().microsecondsSinceEpoch.toString()),
+                    background: Container(
+                      color: Colors.red,
+                      child: Align(
+                        alignment: Alignment(-0.9, 0.0),
+                        child: Icon(
+                          Platform.isAndroid
+                              ? Icons.delete
+                              : CupertinoIcons.delete,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
-                  ),
-                  direction: DismissDirection.startToEnd,
-                  child: CheckboxListTile(
-                    onChanged: (completedTask) {
+                    direction: DismissDirection.startToEnd,
+                    child: CheckboxListTile(
+                      onChanged: (completedTask) {
+                        setState(() {
+                          _toDoList[index]["ok"] = completedTask;
+                          _saveData();
+                        });
+                      },
+                      title: Text(_toDoList[index]["title"]),
+                      value: _toDoList[index]["ok"],
+                      secondary: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        child: Platform.isAndroid
+                            ? Icon(
+                                _toDoList[index]["ok"]
+                                    ? Icons.check
+                                    : Icons.access_alarm_outlined,
+                              )
+                            : Icon(
+                                _toDoList[index]["ok"]
+                                    ? CupertinoIcons.checkmark_alt
+                                    : CupertinoIcons.alarm,
+                              ),
+                      ),
+                    ),
+                    onDismissed: (direction) {
                       setState(() {
-                        _toDoList[index]["ok"] = completedTask;
+                        _lastRemoved = Map.from(_toDoList[index]);
+                        _lastRemovedIndex = index;
+                        _toDoList.removeAt(index);
                         _saveData();
                       });
-                    },
-                    title: Text(_toDoList[index]["title"]),
-                    value: _toDoList[index]["ok"],
-                    secondary: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      child: Platform.isAndroid
-                          ? Icon(
-                              _toDoList[index]["ok"]
-                                  ? Icons.check
-                                  : Icons.access_alarm_outlined,
-                            )
-                          : Icon(
-                              _toDoList[index]["ok"]
-                                  ? CupertinoIcons.checkmark_alt
-                                  : CupertinoIcons.alarm,
-                            ),
-                    ),
-                  ),
-                  onDismissed: (direction) {
-                    setState(() {
-                      _lastRemoved = Map.from(_toDoList[index]);
-                      _lastRemovedIndex = index;
-                      _toDoList.removeAt(index);
-                      _saveData();
-                    });
 
-                    if (Platform.isAndroid) {
-                      final snack = SnackBar(
-                        content: Text(
-                            "Tarefa \"${_lastRemoved["title"]}\" removida."),
-                        action: SnackBarAction(
-                          label: "Desfazer?",
-                          onPressed: () {
-                            setState(() {
-                              _toDoList.insert(_lastRemovedIndex, _lastRemoved);
-                              _saveData();
-                            });
-                          },
-                        ),
-                        duration: Duration(seconds: 2),
-                      );
-
-                      ScaffoldMessenger.of(context).showSnackBar(snack);
-                    } else {
-                      showCupertinoDialog(
-                        context: context,
-                        builder: (_) => PlatformAlertDialog(
-                          title: Padding(
-                            padding: EdgeInsets.all(5),
-                            child: Text(
-                              'Desfazer',
-                              style: TextStyle(color: CupertinoColors.label),
-                            ),
-                          ),
+                      if (Platform.isAndroid) {
+                        final snack = SnackBar(
                           content: Text(
-                              "A  Tarefa \"${_lastRemoved["title"]}\" será removida."),
-                          actions: <Widget>[
-                            PlatformDialogAction(
-                              child: Text("Confirmar"),
-                              onPressed: () => Navigator.pop(context),
+                              "Tarefa \"${_lastRemoved["title"]}\" removida."),
+                          action: SnackBarAction(
+                            label: "Desfazer?",
+                            onPressed: () {
+                              setState(() {
+                                _toDoList.insert(
+                                    _lastRemovedIndex, _lastRemoved);
+                                _saveData();
+                              });
+                            },
+                          ),
+                          duration: Duration(seconds: 2),
+                        );
+
+                        ScaffoldMessenger.of(context).showSnackBar(snack);
+                      } else {
+                        showCupertinoDialog(
+                          context: context,
+                          builder: (_) => PlatformAlertDialog(
+                            title: Padding(
+                              padding: EdgeInsets.all(5),
+                              child: Text(
+                                'Desfazer',
+                                style: TextStyle(color: CupertinoColors.label),
+                              ),
                             ),
-                            PlatformDialogAction(
-                              child: Text("Desfazer"),
-                              onPressed: () {
-                                setState(() {
-                                  _toDoList.insert(
-                                      _lastRemovedIndex, _lastRemoved);
-                                  _saveData();
-                                  Navigator.pop(context);
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-                  },
-                ),
-              );
-            },
+                            content: Text(
+                                "A  Tarefa \"${_lastRemoved["title"]}\" será removida."),
+                            actions: <Widget>[
+                              PlatformDialogAction(
+                                child: Text("Confirmar"),
+                                onPressed: () => Navigator.pop(context),
+                              ),
+                              PlatformDialogAction(
+                                child: Text("Desfazer"),
+                                onPressed: () {
+                                  setState(() {
+                                    _toDoList.insert(
+                                        _lastRemovedIndex, _lastRemoved);
+                                    _saveData();
+                                    Navigator.pop(context);
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ],
