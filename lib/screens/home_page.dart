@@ -157,22 +157,56 @@ class _HomePageState extends State<HomePage> {
                       _saveData();
                     });
 
-                    final snack = SnackBar(
-                      content:
-                          Text("Tarefa \"${_lastRemoved["title"]}\" removida."),
-                      action: SnackBarAction(
-                        label: "Desfazer",
-                        onPressed: () {
-                          setState(() {
-                            _toDoList.insert(_lastRemovedIndex, _lastRemoved);
-                            _saveData();
-                          });
-                        },
-                      ),
-                      duration: Duration(seconds: 2),
-                    );
+                    if (Platform.isAndroid) {
+                      final snack = SnackBar(
+                        content: Text(
+                            "Tarefa \"${_lastRemoved["title"]}\" removida."),
+                        action: SnackBarAction(
+                          label: "Desfazer?",
+                          onPressed: () {
+                            setState(() {
+                              _toDoList.insert(_lastRemovedIndex, _lastRemoved);
+                              _saveData();
+                            });
+                          },
+                        ),
+                        duration: Duration(seconds: 2),
+                      );
 
-                    ScaffoldMessenger.of(context).showSnackBar(snack);
+                      ScaffoldMessenger.of(context).showSnackBar(snack);
+                    } else {
+                      showCupertinoDialog(
+                        context: context,
+                        builder: (_) => PlatformAlertDialog(
+                          title: Padding(
+                            padding: EdgeInsets.all(5),
+                            child: Text(
+                              'Desfazer',
+                              style: TextStyle(color: CupertinoColors.label),
+                            ),
+                          ),
+                          content: Text(
+                              "A  Tarefa \"${_lastRemoved["title"]}\" será removida."),
+                          actions: <Widget>[
+                            PlatformDialogAction(
+                              child: Text("Confirmar"),
+                              onPressed: () => Navigator.pop(context),
+                            ),
+                            PlatformDialogAction(
+                              child: Text("Desfazer"),
+                              onPressed: () {
+                                setState(() {
+                                  _toDoList.insert(
+                                      _lastRemovedIndex, _lastRemoved);
+                                  _saveData();
+                                  Navigator.pop(context);
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    }
                   },
                 ),
               );
